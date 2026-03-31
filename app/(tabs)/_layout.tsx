@@ -65,16 +65,16 @@ export default function TabLayout() {
         }}
       />
 
-      <Tabs.Screen
-        name="protected/employee"
+      {/* <Tabs.Screen
+        name="product"
         options={{
-          title: "Employee",
+          title: "Product",
           href: !user ? null : undefined,
           tabBarIcon: ({ color }) => (
             <Ionicons name="briefcase" size={24} color={color} />
           ),
         }}
-      />
+      /> */}
     </Tabs>
   );
 }

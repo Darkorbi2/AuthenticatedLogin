@@ -37,7 +37,7 @@ const SignupForm = () => {
       );
 
       resetForm();
-      router.replace("/(tabs)/protected/employee");
+      router.replace("/(tabs)/protected/product");
     } catch (error: any) {
       let message = "An unknown error occurred. Please try again.";
       if (error.code) {

@@ -29,7 +29,7 @@ const SigninForm = () => {
           await signInWithEmailAndPassword(auth, values.email, values.password);
           // On success, navigate to employee tab
           resetForm();
-          router.replace("/(tabs)/protected/employee");
+          // router.replace("/(tabs)/protected/product");
         } catch (error: any) {
           let message = "An unknown error occurred. Please try again.";
           if (error.code) {
