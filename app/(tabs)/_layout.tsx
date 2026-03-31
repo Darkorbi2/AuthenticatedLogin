@@ -34,11 +34,15 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarInactiveTintColor: colorScheme === "dark" ? "#9CA3AF" : "#6B7280",
+        tabBarStyle: {
+          backgroundColor: colorScheme === "dark" ? "#111827" : "#FFFFFF",
+          borderTopColor: colorScheme === "dark" ? "#1F2937" : "#E5E7EB",
+        },
         headerShown: false,
         tabBarButton: HapticTab,
       }}
     >
-      {/* Public screens */}
       <Tabs.Screen
         name="sign-in"
         options={{
@@ -61,7 +65,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Protected screen */}
       <Tabs.Screen
         name="protected/employee"
         options={{

@@ -19,10 +19,8 @@ const SigninForm = () => {
   return (
     <Formik
       initialValues={{
-        fullName: "",
         email: "",
         password: "",
-        confirmPassword: "",
       }}
       validationSchema={SigninSchema}
       onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
