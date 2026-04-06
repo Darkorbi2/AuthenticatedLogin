@@ -47,7 +47,6 @@ export default function TabLayout() {
         name="sign-in"
         options={{
           title: "Sign-In",
-          href: user ? null : undefined,
           tabBarIcon: ({ color }) => (
             <Ionicons name="person-circle" size={24} color={color} />
           ),
@@ -58,23 +57,11 @@ export default function TabLayout() {
         name="sign-up"
         options={{
           title: "Sign-Up",
-          href: user ? null : undefined,
           tabBarIcon: ({ color }) => (
             <Ionicons name="person-circle-outline" size={24} color={color} />
           ),
         }}
       />
-
-      {/* <Tabs.Screen
-        name="product"
-        options={{
-          title: "Product",
-          href: !user ? null : undefined,
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="briefcase" size={24} color={color} />
-          ),
-        }}
-      /> */}
     </Tabs>
   );
 }
