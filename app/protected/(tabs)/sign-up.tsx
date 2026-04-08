@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import { useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import * as Yup from "yup";
-import { auth } from "../../config/firebase";
+import { auth } from "../../../config/firebase";
 
 const SignupSchema = Yup.object().shape({
   fullName: Yup.string().required("Full name is required"),
@@ -181,13 +181,7 @@ const SignupForm = () => {
             <Button onPress={() => resetForm()} title="Reset" color="red" />
           </View>
 
-          <View style={styles.submitButton}>
-            <Text style={styles.signupText}>Already Registered? </Text>
-            <Button
-              title="Sign In"
-              onPress={() => router.push("./index")}
-            />
-          </View>
+          <View style={styles.submitButton}></View>
         </View>
       )}
     </Formik>

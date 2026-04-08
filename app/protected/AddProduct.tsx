@@ -1,7 +1,9 @@
+import { Picker } from "@react-native-picker/picker";
 import { Formik } from "formik";
 import React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import * as Yup from "yup";
+import { Category } from "../protected/CategoryListItem";
 import { Product } from "./ProductListItem";
 
 const productSchema = Yup.object().shape({
@@ -15,9 +17,13 @@ const productSchema = Yup.object().shape({
 
 type ProductFormProps = {
   onAddProduct: (product: Product) => void;
+  categories: Category[];
 };
 
-export default function AddProduct({ onAddProduct }: ProductFormProps) {
+export default function AddProduct({
+  onAddProduct,
+  categories,
+}: ProductFormProps) {
   return (
     <Formik
       validateOnMount={false}
@@ -89,21 +95,34 @@ export default function AddProduct({ onAddProduct }: ProductFormProps) {
               <Text style={styles.errorText}>⚠️ {errors.quantity}</Text>
             ) : null}
           </View>
-
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Category</Text>
-            <TextInput
-              placeholder="Category of your product i.e Fruit"
-              placeholderTextColor={colors.placeholder}
-              onChangeText={handleChange("category")}
-              onBlur={handleBlur("category")}
-              value={values.category}
-              autoCapitalize="none"
+
+            <View
               style={[
-                styles.input,
+                styles.pickerContainer,
                 touched.category && errors.category ? styles.inputError : null,
               ]}
-            />
+            >
+              <Picker
+                selectedValue={values.category}
+                onValueChange={(itemValue) =>
+                  handleChange("category")(itemValue)
+                }
+                onBlur={() => handleBlur("category")}
+              >
+                <Picker.Item label="Select a category..." value="" />
+
+                {categories.map((category) => (
+                  <Picker.Item
+                    key={category.id}
+                    label={category.name}
+                    value={category.name}
+                  />
+                ))}
+              </Picker>
+            </View>
+
             {errors.category && touched.category ? (
               <Text style={styles.errorText}>⚠️ {errors.category}</Text>
             ) : null}
@@ -173,6 +192,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
+  },
+
+  pickerContainer: {
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    borderRadius: 10,
+    backgroundColor: colors.bgInput,
+    overflow: "hidden",
   },
 
   fieldGroup: {

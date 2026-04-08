@@ -2,9 +2,9 @@ import { HapticTab } from "@/components/haptic-tab";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs, Redirect } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import { onAuthStateChanged, User } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { auth } from "../../../config/firebase";
 
@@ -68,6 +68,17 @@ export default function ProtectedTabLayout() {
           href: isAdmin ? undefined : null,
           tabBarIcon: ({ color }) => (
             <Ionicons name="grid-outline" size={24} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="sign-up"
+        options={{
+          title: "Sign-Up",
+          href: isAdmin ? undefined : null,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person-circle-outline" size={24} color={color} />
           ),
         }}
       />

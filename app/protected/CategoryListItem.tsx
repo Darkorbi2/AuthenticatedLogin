@@ -26,7 +26,11 @@ export default function CategoryListItem({
           <Button title="Edit" onPress={() => onEdit(category)} />
         </View>
         <View style={styles.button}>
-          <Button title="Delete" color="#EF4444" onPress={() => onDelete(category.id)} />
+          <Button
+            title="Delete"
+            color="#EF4444"
+            onPress={() => onDelete(category.id)}
+          />
         </View>
       </View>
     </View>

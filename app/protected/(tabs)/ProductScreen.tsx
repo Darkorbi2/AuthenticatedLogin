@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
 import { signOut } from "firebase/auth";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Alert,
   Button,
@@ -14,17 +15,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../config/firebase";
 import AddProduct from "../AddProduct";
+import { Category } from "../CategoryListItem";
 import ProductListItem, { Product } from "../ProductListItem";
 
 const PRODUCT_STORAGE_KEY = "products";
+const CATEGORY_STORAGE_KEY = "categories";
 
 export default function ProductScreen() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [searchText, setSearchText] = useState("");
-
-  useEffect(() => {
-    loadProducts();
-  }, []);
 
   const loadProducts = async () => {
     try {
@@ -38,11 +38,32 @@ export default function ProductScreen() {
     }
   };
 
+  const loadCategories = async () => {
+    try {
+      const savedCategories = await AsyncStorage.getItem(CATEGORY_STORAGE_KEY);
+
+      if (savedCategories) {
+        setCategories(JSON.parse(savedCategories));
+      } else {
+        setCategories([]);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to load categories");
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadProducts();
+      loadCategories();
+    }, []),
+  );
+
   const saveProducts = async (updatedProducts: Product[]) => {
     try {
       await AsyncStorage.setItem(
         PRODUCT_STORAGE_KEY,
-        JSON.stringify(updatedProducts)
+        JSON.stringify(updatedProducts),
       );
     } catch (error) {
       Alert.alert("Error", "Failed to save products");
@@ -91,7 +112,7 @@ export default function ProductScreen() {
               />
             </View>
 
-            <AddProduct onAddProduct={addProduct} />
+            <AddProduct onAddProduct={addProduct} categories={categories} />
 
             <View style={styles.searchContainer}>
               <Text style={styles.searchLabel}>Search products</Text>

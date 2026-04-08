@@ -4,7 +4,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { onAuthStateChanged, User } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { auth } from "../../config/firebase";
 
@@ -49,16 +49,6 @@ export default function TabLayout() {
           title: "Sign-In",
           tabBarIcon: ({ color }) => (
             <Ionicons name="person-circle" size={24} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="sign-up"
-        options={{
-          title: "Sign-Up",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person-circle-outline" size={24} color={color} />
           ),
         }}
       />

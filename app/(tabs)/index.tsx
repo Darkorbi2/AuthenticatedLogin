@@ -119,7 +119,7 @@ const SigninForm = () => {
             <Button onPress={() => handleSubmit()} title="Login" />
           </View>
 
-          <View style={styles.registerButton}>
+          {/* <View style={styles.registerButton}>
             <Text style={styles.signupText}>Not Registered? </Text>
 
             <View style={styles.signupButton}>
@@ -128,7 +128,7 @@ const SigninForm = () => {
                 onPress={() => router.push("/(tabs)/sign-up")}
               />
             </View>
-          </View>
+          </View> */}
         </View>
       )}
     </Formik>

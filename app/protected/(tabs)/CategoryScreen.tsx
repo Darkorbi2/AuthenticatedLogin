@@ -2,14 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Alert, Button, FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../config/firebase";
 import AddCategory from "../AddCategory";
@@ -45,7 +38,7 @@ export default function CategoryScreen() {
     try {
       await AsyncStorage.setItem(
         CATEGORY_STORAGE_KEY,
-        JSON.stringify(updatedCategories)
+        JSON.stringify(updatedCategories),
       );
     } catch (error) {
       Alert.alert("Error", "Failed to save categories");
@@ -69,7 +62,7 @@ export default function CategoryScreen() {
 
   const updateCategory = async (updatedCategory: Category) => {
     const updatedCategories = categories.map((category) =>
-      category.id === updatedCategory.id ? updatedCategory : category
+      category.id === updatedCategory.id ? updatedCategory : category,
     );
 
     setCategories(updatedCategories);
@@ -87,13 +80,13 @@ export default function CategoryScreen() {
           style: "destructive",
           onPress: async () => {
             const updatedCategories = categories.filter(
-              (category) => category.id !== id
+              (category) => category.id !== id,
             );
             setCategories(updatedCategories);
             await saveCategories(updatedCategories);
           },
         },
-      ]
+      ],
     );
   };
 
