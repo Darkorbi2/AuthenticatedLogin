@@ -2,7 +2,7 @@ import { Formik } from "formik";
 import React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import * as Yup from "yup";
-import { Product } from "../ProductListItem";
+import { Product } from "./ProductListItem";
 
 const productSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),

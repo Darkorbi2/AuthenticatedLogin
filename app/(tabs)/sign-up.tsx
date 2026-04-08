@@ -37,7 +37,7 @@ const SignupForm = () => {
       );
 
       resetForm();
-      router.replace("/../protected/product");
+      router.replace("../protected/product");
     } catch (error: any) {
       let message = "An unknown error occurred. Please try again.";
       if (error.code) {
@@ -185,7 +185,7 @@ const SignupForm = () => {
             <Text style={styles.signupText}>Already Registered? </Text>
             <Button
               title="Sign In"
-              onPress={() => router.push("/(tabs)/sign-in")}
+              onPress={() => router.push("./index")}
             />
           </View>
         </View>

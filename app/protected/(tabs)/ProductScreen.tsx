@@ -1,6 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { signOut } from "firebase/auth";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Button,
@@ -12,24 +13,55 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../config/firebase";
+import AddProduct from "../AddProduct";
 import ProductListItem, { Product } from "../ProductListItem";
-import AddProduct from "./AddProduct";
+
+const PRODUCT_STORAGE_KEY = "products";
 
 export default function ProductScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchText, setSearchText] = useState("");
 
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      const savedProducts = await AsyncStorage.getItem(PRODUCT_STORAGE_KEY);
+
+      if (savedProducts) {
+        setProducts(JSON.parse(savedProducts));
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to load products");
+    }
+  };
+
+  const saveProducts = async (updatedProducts: Product[]) => {
+    try {
+      await AsyncStorage.setItem(
+        PRODUCT_STORAGE_KEY,
+        JSON.stringify(updatedProducts)
+      );
+    } catch (error) {
+      Alert.alert("Error", "Failed to save products");
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      router.replace("/(tabs)/sign-in");
+      router.replace("/(tabs)");
     } catch (error) {
       Alert.alert("Sign Out Error", "Failed to sign out. Please try again.");
     }
   };
 
-  const addProduct = (newProduct: Product) => {
-    setProducts((prev) => [...prev, newProduct]);
+  const addProduct = async (newProduct: Product) => {
+    const updatedProducts = [...products, newProduct];
+    setProducts(updatedProducts);
+    await saveProducts(updatedProducts);
   };
 
   const filteredProducts = useMemo(() => {
@@ -60,6 +92,7 @@ export default function ProductScreen() {
             </View>
 
             <AddProduct onAddProduct={addProduct} />
+
             <View style={styles.searchContainer}>
               <Text style={styles.searchLabel}>Search products</Text>
               <TextInput

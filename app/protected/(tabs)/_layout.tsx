@@ -2,13 +2,15 @@ import { HapticTab } from "@/components/haptic-tab";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 import { onAuthStateChanged, User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { auth } from "../../config/firebase";
+import { auth } from "../../../config/firebase";
 
-export default function TabLayout() {
+const ADMIN_EMAIL = "admin@test.com";
+
+export default function ProtectedTabLayout() {
   const colorScheme = useColorScheme();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,6 +32,12 @@ export default function TabLayout() {
     );
   }
 
+  if (!user) {
+    return <Redirect href="/(tabs)" />;
+  }
+
+  const isAdmin = user.email === ADMIN_EMAIL;
+
   return (
     <Tabs
       screenOptions={{
@@ -44,21 +52,22 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="ProductScreen"
         options={{
-          title: "Sign-In",
+          title: "Products",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="person-circle" size={24} color={color} />
+            <Ionicons name="cube-outline" size={24} color={color} />
           ),
         }}
       />
 
       <Tabs.Screen
-        name="sign-up"
+        name="CategoryScreen"
         options={{
-          title: "Sign-Up",
+          title: "Categories",
+          href: isAdmin ? undefined : null,
           tabBarIcon: ({ color }) => (
-            <Ionicons name="person-circle-outline" size={24} color={color} />
+            <Ionicons name="grid-outline" size={24} color={color} />
           ),
         }}
       />
