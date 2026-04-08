@@ -1,3 +1,4 @@
+import Checkbox from "expo-checkbox";
 import { Formik } from "formik";
 import React from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
@@ -28,6 +29,9 @@ export default function AddCategory({
       enableReinitialize
       initialValues={{
         name: editingCategory ? editingCategory.name : "",
+        isSubCategory: editingCategory
+          ? editingCategory.isSubCategory || false
+          : false,
       }}
       validationSchema={categorySchema}
       onSubmit={(values, { resetForm }) => {
@@ -36,7 +40,7 @@ export default function AddCategory({
         const exists = categories.some(
           (category) =>
             category.name.toLowerCase() === trimmedName.toLowerCase() &&
-            category.id !== editingCategory?.id
+            category.id !== editingCategory?.id,
         );
 
         if (exists) {
@@ -48,6 +52,7 @@ export default function AddCategory({
           onUpdateCategory({
             ...editingCategory,
             name: trimmedName,
+            isSubCategory: values.isSubCategory,
           });
           Alert.alert("Success", "Category updated successfully");
           clearEditing();
@@ -55,6 +60,7 @@ export default function AddCategory({
           const newCategory: Category = {
             id: Date.now().toString(),
             name: trimmedName,
+            isSubCategory: values.isSubCategory,
           };
           onAddCategory(newCategory);
           Alert.alert("Success", "Category added successfully");
@@ -71,6 +77,7 @@ export default function AddCategory({
         errors,
         touched,
         resetForm,
+        setFieldValue,
       }) => (
         <View style={styles.formContainer}>
           <Text style={styles.heading}>
@@ -92,6 +99,14 @@ export default function AddCategory({
             {touched.name && errors.name ? (
               <Text style={styles.errorText}>{errors.name}</Text>
             ) : null}
+          </View>
+
+          <View style={styles.checkboxRow}>
+            <Checkbox
+              value={values.isSubCategory}
+              onValueChange={(value) => setFieldValue("isSubCategory", value)}
+            />
+            <Text style={styles.checkboxLabel}>Has Subcategories</Text>
           </View>
 
           <View style={styles.buttonContainer}>
@@ -165,6 +180,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#DC2626",
     fontWeight: "500",
+  },
+  checkboxRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 18,
+  },
+  checkboxLabel: {
+    marginLeft: 10,
+    fontSize: 15,
+    color: "#111827",
   },
   buttonContainer: {
     marginTop: 8,

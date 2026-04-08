@@ -113,13 +113,15 @@ export default function AddProduct({
               >
                 <Picker.Item label="Select a category..." value="" />
 
-                {categories.map((category) => (
-                  <Picker.Item
-                    key={category.id}
-                    label={category.name}
-                    value={category.name}
-                  />
-                ))}
+                {categories
+                  .filter((category) => !category.isSubCategory) // keep only categories you want
+                  .map((category) => (
+                    <Picker.Item
+                      key={category.id}
+                      label={category.name}
+                      value={category.name}
+                    />
+                  ))}
               </Picker>
             </View>
 
@@ -130,19 +132,36 @@ export default function AddProduct({
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Subcategory</Text>
-            <TextInput
-              placeholder="Subcategory of your product i.e melon"
-              placeholderTextColor={colors.placeholder}
-              onChangeText={handleChange("subCategory")}
-              onBlur={handleBlur("subCategory")}
-              value={values.subCategory}
+
+            <View
               style={[
-                styles.input,
+                styles.pickerContainer,
                 touched.subCategory && errors.subCategory
                   ? styles.inputError
                   : null,
               ]}
-            />
+            >
+              <Picker
+                selectedValue={values.subCategory}
+                onValueChange={(itemValue) =>
+                  handleChange("subCategory")(itemValue)
+                }
+                onBlur={() => handleBlur("subCategory")}
+              >
+                <Picker.Item label="Select a Subcategory..." value="" />
+
+                {categories
+                  .filter((category) => category.isSubCategory) // keep only categories you want
+                  .map((category) => (
+                    <Picker.Item
+                      key={category.id}
+                      label={category.name}
+                      value={category.name}
+                    />
+                  ))}
+              </Picker>
+            </View>
+
             {errors.subCategory && touched.subCategory ? (
               <Text style={styles.errorText}>⚠️ {errors.subCategory}</Text>
             ) : null}

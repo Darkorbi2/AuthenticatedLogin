@@ -4,6 +4,7 @@ import { Button, StyleSheet, Text, View } from "react-native";
 export type Category = {
   id: string;
   name: string;
+  isSubCategory?: boolean;
 };
 
 type CategoryListItemProps = {
