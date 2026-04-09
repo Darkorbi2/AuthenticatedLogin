@@ -36,8 +36,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         tabBarInactiveTintColor: colorScheme === "dark" ? "#9CA3AF" : "#6B7280",
         tabBarStyle: {
-          backgroundColor: colorScheme === "dark" ? "#111827" : "#FFFFFF",
-          borderTopColor: colorScheme === "dark" ? "#1F2937" : "#E5E7EB",
+          display: "none",
         },
         headerShown: false,
         tabBarButton: HapticTab,
@@ -50,6 +49,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Ionicons name="person-circle" size={24} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="forgot-password"
+        options={{
+          href: null,
+          title: "Forgot Password",
         }}
       />
     </Tabs>

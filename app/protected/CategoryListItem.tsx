@@ -5,6 +5,7 @@ export type Category = {
   id: string;
   name: string;
   isSubCategory?: boolean;
+  parentCategoryId?: string;
 };
 
 type CategoryListItemProps = {
@@ -21,6 +22,11 @@ export default function CategoryListItem({
   return (
     <View style={styles.card}>
       <Text style={styles.name}>{category.name}</Text>
+      {category.isSubCategory ? (
+        <Text style={styles.metaText}>Subcategory item</Text>
+      ) : (
+        <Text style={styles.metaText}>Main category</Text>
+      )}
 
       <View style={styles.buttonRow}>
         <View style={styles.button}>
@@ -55,6 +61,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "700",
     color: "#111827",
+    marginBottom: 4,
+  },
+  metaText: {
+    color: "#6B7280",
+    fontSize: 13,
     marginBottom: 12,
   },
   buttonRow: {

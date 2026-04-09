@@ -1,7 +1,15 @@
 import Checkbox from "expo-checkbox";
 import { Formik } from "formik";
 import React from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Button,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import * as Yup from "yup";
 import { Category } from "./CategoryListItem";
 
@@ -15,6 +23,11 @@ type AddCategoryProps = {
 
 const categorySchema = Yup.object().shape({
   name: Yup.string().trim().required("Category name is required"),
+  parentCategoryId: Yup.string().when("isSubCategory", {
+    is: true,
+    then: (schema) => schema.required("Parent category is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
 
 export default function AddCategory({
@@ -24,6 +37,10 @@ export default function AddCategory({
   editingCategory,
   clearEditing,
 }: AddCategoryProps) {
+  const parentCandidates = categories.filter(
+    (category) => !category.isSubCategory,
+  );
+
   return (
     <Formik
       enableReinitialize
@@ -32,6 +49,7 @@ export default function AddCategory({
         isSubCategory: editingCategory
           ? editingCategory.isSubCategory || false
           : false,
+        parentCategoryId: editingCategory?.parentCategoryId || "",
       }}
       validationSchema={categorySchema}
       onSubmit={(values, { resetForm }) => {
@@ -53,6 +71,9 @@ export default function AddCategory({
             ...editingCategory,
             name: trimmedName,
             isSubCategory: values.isSubCategory,
+            parentCategoryId: values.isSubCategory
+              ? values.parentCategoryId
+              : undefined,
           });
           Alert.alert("Success", "Category updated successfully");
           clearEditing();
@@ -61,6 +82,9 @@ export default function AddCategory({
             id: Date.now().toString(),
             name: trimmedName,
             isSubCategory: values.isSubCategory,
+            parentCategoryId: values.isSubCategory
+              ? values.parentCategoryId
+              : undefined,
           };
           onAddCategory(newCategory);
           Alert.alert("Success", "Category added successfully");
@@ -104,10 +128,60 @@ export default function AddCategory({
           <View style={styles.checkboxRow}>
             <Checkbox
               value={values.isSubCategory}
-              onValueChange={(value) => setFieldValue("isSubCategory", value)}
+              onValueChange={(value) => {
+                setFieldValue("isSubCategory", value);
+
+                if (!value) {
+                  setFieldValue("parentCategoryId", "");
+                }
+              }}
             />
-            <Text style={styles.checkboxLabel}>Has Subcategories</Text>
+            <Text style={styles.checkboxLabel}>Is Subcategory</Text>
           </View>
+
+          {values.isSubCategory && (
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>Parent Category</Text>
+
+              <View style={styles.parentListWrap}>
+                {parentCandidates.length === 0 ? (
+                  <Text style={styles.emptyText}>
+                    Add a main category first.
+                  </Text>
+                ) : (
+                  parentCandidates.map((parent) => {
+                    const selected = values.parentCategoryId === parent.id;
+
+                    return (
+                      <Pressable
+                        key={parent.id}
+                        onPress={() =>
+                          setFieldValue("parentCategoryId", parent.id)
+                        }
+                        style={[
+                          styles.parentPill,
+                          selected ? styles.parentPillSelected : null,
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.parentPillText,
+                            selected ? styles.parentPillTextSelected : null,
+                          ]}
+                        >
+                          {parent.name}
+                        </Text>
+                      </Pressable>
+                    );
+                  })
+                )}
+              </View>
+
+              {touched.parentCategoryId && errors.parentCategoryId ? (
+                <Text style={styles.errorText}>{errors.parentCategoryId}</Text>
+              ) : null}
+            </View>
+          )}
 
           <View style={styles.buttonContainer}>
             <Button
@@ -195,5 +269,34 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 10,
     overflow: "hidden",
+  },
+  parentListWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  parentPill: {
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  parentPillSelected: {
+    borderColor: "#65A30D",
+    backgroundColor: "#ECFCCB",
+  },
+  parentPillText: {
+    color: "#374151",
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  parentPillTextSelected: {
+    color: "#365314",
+  },
+  emptyText: {
+    color: "#6B7280",
+    fontSize: 13,
   },
 });

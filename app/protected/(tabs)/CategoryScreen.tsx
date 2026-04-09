@@ -1,8 +1,17 @@
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { Alert, Button, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+    Alert,
+    Button,
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../config/firebase";
 import AddCategory from "../AddCategory";
@@ -108,12 +117,12 @@ export default function CategoryScreen() {
       <FlatList
         ListHeaderComponent={
           <View>
-            <View style={styles.signOutContainer}>
-              <Button
-                title="Sign Out"
-                onPress={handleSignOut}
-                color="#EF4444"
-              />
+            <View style={styles.topBar}>
+              <Text style={styles.topBarTitle}>Categories</Text>
+              <Pressable onPress={handleSignOut} style={styles.signOutButton}>
+                <Ionicons name="log-out-outline" size={17} color="#DC2626" />
+                <Text style={styles.signOutText}>Sign Out</Text>
+              </Pressable>
             </View>
 
             <AddCategory
@@ -150,13 +159,37 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9FAFB",
     flex: 1,
   },
-  signOutContainer: {
+  topBar: {
     marginHorizontal: 20,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  topBarTitle: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#111827",
+  },
+  signOutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: "#FEF2F2",
+    borderWidth: 1,
+    borderColor: "#FECACA",
+  },
+  signOutText: {
+    color: "#DC2626",
+    fontWeight: "700",
+    fontSize: 13,
   },
   listHeader: {
-    marginTop: 14,
+    marginTop: 10,
     marginHorizontal: 20,
     marginBottom: 12,
     fontSize: 20,
