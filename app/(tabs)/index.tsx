@@ -165,7 +165,7 @@ const SigninForm = () => {
 
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.push("/(tabs)/forgot-password")}
+            onPress={() => router.push("./forgot-password")}
             style={styles.forgotButton}
           >
             <Text style={styles.forgotButtonText}>Forgot Password?</Text>

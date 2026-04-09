@@ -3,8 +3,8 @@ import { Formik } from "formik";
 import React from "react";
 import {
   Alert,
-  Button,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -108,10 +108,13 @@ export default function AddCategory({
             {editingCategory ? "Edit Category" : "Add Category"}
           </Text>
 
+          <Text style={styles.sectionTitle}>General information</Text>
+
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Category Name</Text>
             <TextInput
               placeholder="Enter category name"
+              placeholderTextColor={colors.placeholder}
               value={values.name}
               onChangeText={handleChange("name")}
               onBlur={handleBlur("name")}
@@ -121,85 +124,117 @@ export default function AddCategory({
               ]}
             />
             {touched.name && errors.name ? (
-              <Text style={styles.errorText}>{errors.name}</Text>
+              <Text style={styles.errorText}>Error: {errors.name}</Text>
             ) : null}
           </View>
 
-          <View style={styles.checkboxRow}>
-            <Checkbox
-              value={values.isSubCategory}
-              onValueChange={(value) => {
-                setFieldValue("isSubCategory", value);
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Category Type</Text>
 
-                if (!value) {
+            <Pressable
+              style={styles.checkboxCard}
+              onPress={() => {
+                const nextValue = !values.isSubCategory;
+                setFieldValue("isSubCategory", nextValue);
+
+                if (!nextValue) {
                   setFieldValue("parentCategoryId", "");
                 }
               }}
-            />
-            <Text style={styles.checkboxLabel}>Is Subcategory</Text>
+            >
+              <View style={styles.checkboxLeft}>
+                <Checkbox
+                  value={values.isSubCategory}
+                  onValueChange={(value: any) => {
+                    setFieldValue("isSubCategory", value);
+
+                    if (!value) {
+                      setFieldValue("parentCategoryId", "");
+                    }
+                  }}
+                  color={values.isSubCategory ? colors.primary : undefined}
+                />
+                <Text style={styles.checkboxLabel}>Is Subcategory</Text>
+              </View>
+
+              <Text style={styles.checkboxHint}>
+                {values.isSubCategory ? "Yes" : "No"}
+              </Text>
+            </Pressable>
           </View>
 
           {values.isSubCategory && (
             <View style={styles.fieldGroup}>
               <Text style={styles.label}>Parent Category</Text>
 
-              <View style={styles.parentListWrap}>
+              <View style={styles.parentListCard}>
                 {parentCandidates.length === 0 ? (
-                  <Text style={styles.emptyText}>
-                    Add a main category first.
-                  </Text>
+                  <Text style={styles.emptyText}>Add a main category first.</Text>
                 ) : (
-                  parentCandidates.map((parent) => {
-                    const selected = values.parentCategoryId === parent.id;
+                  <ScrollView
+                    horizontal={false}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={styles.parentListWrap}
+                  >
+                    {parentCandidates.map((parent) => {
+                      const selected = values.parentCategoryId === parent.id;
 
-                    return (
-                      <Pressable
-                        key={parent.id}
-                        onPress={() =>
-                          setFieldValue("parentCategoryId", parent.id)
-                        }
-                        style={[
-                          styles.parentPill,
-                          selected ? styles.parentPillSelected : null,
-                        ]}
-                      >
-                        <Text
+                      return (
+                        <Pressable
+                          key={parent.id}
+                          onPress={() =>
+                            setFieldValue("parentCategoryId", parent.id)
+                          }
                           style={[
-                            styles.parentPillText,
-                            selected ? styles.parentPillTextSelected : null,
+                            styles.parentPill,
+                            selected ? styles.parentPillSelected : null,
                           ]}
                         >
-                          {parent.name}
-                        </Text>
-                      </Pressable>
-                    );
-                  })
+                          <Text
+                            style={[
+                              styles.parentPillText,
+                              selected ? styles.parentPillTextSelected : null,
+                            ]}
+                          >
+                            {parent.name}
+                          </Text>
+                        </Pressable>
+                      );
+                    })}
+                  </ScrollView>
                 )}
               </View>
 
               {touched.parentCategoryId && errors.parentCategoryId ? (
-                <Text style={styles.errorText}>{errors.parentCategoryId}</Text>
+                <Text style={styles.errorText}>
+                  Error: {errors.parentCategoryId}
+                </Text>
               ) : null}
             </View>
           )}
 
-          <View style={styles.buttonContainer}>
-            <Button
-              title={editingCategory ? "Update Category" : "Add Category"}
+          <View style={styles.submitButton}>
+            <Pressable
               onPress={() => handleSubmit()}
-            />
+              style={styles.primaryButton}
+            >
+              <Text style={styles.primaryButtonText}>
+                {editingCategory ? "Update Category" : "Add Category"}
+              </Text>
+            </Pressable>
           </View>
 
           {editingCategory && (
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Cancel Edit"
-                color="#6B7280"
+            <View style={[styles.submitButton, { marginTop: 8 }]}>
+              <Pressable
                 onPress={() => {
                   clearEditing();
                   resetForm();
                 }}
-              />
+                style={styles.secondaryButton}
+              >
+                <Text style={styles.secondaryButtonText}>Cancel Edit</Text>
+              </Pressable>
             </View>
           )}
         </View>
@@ -208,95 +243,205 @@ export default function AddCategory({
   );
 }
 
+const colors = {
+  primary: "#66BB43",
+  border: "#E3E7EF",
+  borderError: "#EF4444",
+  bgInput: "#FFFFFF",
+  bgError: "#FEF2F2",
+  textMain: "#111827",
+  textError: "#DC2626",
+  placeholder: "#9CA3AF",
+  cardShadow: "rgba(0,0,0,0.16)",
+};
+
 const styles = StyleSheet.create({
   formContainer: {
-    margin: 20,
-    padding: 24,
+    margin: 16,
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    paddingBottom: 20,
     backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
+    borderRadius: 12,
+    shadowColor: colors.cardShadow,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
     elevation: 3,
   },
+
   heading: {
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 16,
+    textAlign: "center",
+    fontSize: 28,
+    fontWeight: "800",
     color: "#111827",
+    letterSpacing: -0.6,
+    marginBottom: 18,
   },
+
+  sectionTitle: {
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#111827",
+    marginBottom: 8,
+  },
+
   fieldGroup: {
     marginBottom: 18,
   },
+
   label: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#374151",
-    marginBottom: 6,
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#111827",
+    marginBottom: 8,
   },
+
   input: {
     borderWidth: 1.5,
-    borderColor: "#D1D5DB",
-    borderRadius: 10,
-    backgroundColor: "#FFFFFF",
+    borderColor: colors.border,
+    borderRadius: 12,
+    backgroundColor: colors.bgInput,
     paddingHorizontal: 14,
-    paddingVertical: 11,
-    fontSize: 15,
-    color: "#111827",
+    paddingVertical: 12,
+    fontSize: 16,
+    color: colors.textMain,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 2,
   },
+
   inputError: {
-    borderColor: "#EF4444",
-    backgroundColor: "#FEF2F2",
+    borderColor: colors.borderError,
+    backgroundColor: colors.bgError,
   },
+
   errorText: {
     marginTop: 5,
     fontSize: 12,
-    color: "#DC2626",
+    color: colors.textError,
     fontWeight: "500",
   },
-  checkboxRow: {
+
+  checkboxCard: {
+    minHeight: 56,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    borderRadius: 12,
+    backgroundColor: colors.bgInput,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 18,
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 2,
   },
+
+  checkboxLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
   checkboxLabel: {
     marginLeft: 10,
-    fontSize: 15,
-    color: "#111827",
+    fontSize: 16,
+    fontWeight: "500",
+    color: colors.textMain,
   },
-  buttonContainer: {
-    marginTop: 8,
-    borderRadius: 10,
-    overflow: "hidden",
+
+  checkboxHint: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#64748B",
   },
+
+  parentListCard: {
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    borderRadius: 12,
+    backgroundColor: colors.bgInput,
+    padding: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+
   parentListWrap: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
+    gap: 10,
   },
+
   parentPill: {
     borderWidth: 1,
     borderColor: "#D1D5DB",
     backgroundColor: "#FFFFFF",
     borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
   },
+
   parentPillSelected: {
-    borderColor: "#65A30D",
-    backgroundColor: "#ECFCCB",
+    borderColor: "#A7D88D",
+    backgroundColor: "#F2FAED",
   },
+
   parentPillText: {
     color: "#374151",
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600",
   },
+
   parentPillTextSelected: {
     color: "#365314",
   },
+
   emptyText: {
     color: "#6B7280",
-    fontSize: 13,
+    fontSize: 14,
+    textAlign: "center",
+    paddingVertical: 8,
+  },
+
+  submitButton: {
+    marginTop: 14,
+    borderRadius: 14,
+    overflow: "hidden",
+  },
+
+  primaryButton: {
+    height: 56,
+    borderRadius: 14,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  primaryButtonText: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#111111",
+  },
+
+  secondaryButton: {
+    height: 56,
+    borderRadius: 14,
+    backgroundColor: "#C5C5C5",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  secondaryButtonText: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#111111",
   },
 });

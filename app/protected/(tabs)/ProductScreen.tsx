@@ -5,13 +5,13 @@ import { router } from "expo-router";
 import { signOut } from "firebase/auth";
 import React, { useCallback, useMemo, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../config/firebase";
@@ -146,8 +146,7 @@ export default function ProductScreen() {
 }
 
 const colors = {
-  primary: "#2563EB",
-  border: "#D1D5DB",
+  border: "#E3E7EF",
   bgInput: "#FFFFFF",
   textMain: "#111827",
   textLabel: "#374151",
@@ -162,7 +161,7 @@ const styles = StyleSheet.create({
   },
 
   topBar: {
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     marginTop: 10,
     marginBottom: 8,
     flexDirection: "row",
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
   },
 
   topBarTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "800",
     color: "#111827",
   },
@@ -180,7 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
     backgroundColor: "#FEF2F2",
@@ -195,36 +194,43 @@ const styles = StyleSheet.create({
   },
 
   searchContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     marginTop: 6,
     marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 2,
   },
 
   searchLabel: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: colors.textLabel,
-    marginBottom: 6,
-    letterSpacing: 0.3,
+    fontSize: 16,
+    fontWeight: "700",
+    color: colors.textMain,
+    marginBottom: 8,
   },
 
   searchInput: {
     borderWidth: 1.5,
     borderColor: colors.border,
-    borderRadius: 10,
+    borderRadius: 12,
     backgroundColor: colors.bgInput,
     paddingHorizontal: 14,
-    paddingVertical: 11,
-    fontSize: 15,
+    paddingVertical: 12,
+    fontSize: 16,
     color: colors.textMain,
   },
 
   listHeader: {
     marginTop: 14,
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     marginBottom: 12,
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 22,
+    fontWeight: "800",
     color: "#111827",
   },
 

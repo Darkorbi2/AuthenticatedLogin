@@ -4,13 +4,12 @@ import { router } from "expo-router";
 import { signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import {
-    Alert,
-    Button,
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../config/firebase";
@@ -103,10 +102,16 @@ export default function CategoryScreen() {
     return (
       <SafeAreaView style={styles.bg}>
         <View style={styles.center}>
-          <Text style={styles.deniedText}>
-            Access denied. Only admin can manage categories.
-          </Text>
-          <Button title="Go Back" onPress={() => router.back()} />
+          <View style={styles.deniedCard}>
+            <Text style={styles.deniedTitle}>Access Denied</Text>
+            <Text style={styles.deniedText}>
+              Only admin can manage categories.
+            </Text>
+
+            <Pressable onPress={() => router.back()} style={styles.primaryButton}>
+              <Text style={styles.primaryButtonText}>Go Back</Text>
+            </Pressable>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -154,64 +159,114 @@ export default function CategoryScreen() {
   );
 }
 
+const colors = {
+  bgScreen: "#F9FAFB",
+  textMain: "#111827",
+  textMuted: "#6B7280",
+  primary: "#66BB43",
+  cardShadow: "rgba(0,0,0,0.16)",
+};
+
 const styles = StyleSheet.create({
   bg: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: colors.bgScreen,
     flex: 1,
   },
+
   topBar: {
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     marginTop: 10,
     marginBottom: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
+
   topBarTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "800",
     color: "#111827",
   },
+
   signOutButton: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
     backgroundColor: "#FEF2F2",
     borderWidth: 1,
     borderColor: "#FECACA",
   },
+
   signOutText: {
     color: "#DC2626",
     fontWeight: "700",
     fontSize: 13,
   },
+
   listHeader: {
-    marginTop: 10,
-    marginHorizontal: 20,
+    marginTop: 14,
+    marginHorizontal: 16,
     marginBottom: 12,
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 22,
+    fontWeight: "800",
     color: "#111827",
   },
+
   emptyText: {
     textAlign: "center",
     color: "#6B7280",
     marginTop: 10,
     fontSize: 14,
   },
+
   center: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
   },
+
+  deniedCard: {
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    padding: 20,
+    borderRadius: 14,
+    shadowColor: colors.cardShadow,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.16,
+    shadowRadius: 12,
+    elevation: 3,
+  },
+
+  deniedTitle: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#111827",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+
   deniedText: {
     fontSize: 16,
-    color: "#111827",
-    marginBottom: 16,
+    color: "#6B7280",
+    marginBottom: 18,
     textAlign: "center",
+  },
+
+  primaryButton: {
+    height: 52,
+    borderRadius: 12,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  primaryButtonText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#111111",
   },
 });

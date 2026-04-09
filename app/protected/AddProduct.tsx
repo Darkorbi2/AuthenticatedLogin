@@ -200,10 +200,6 @@ export default function AddProduct({
         <View style={styles.formContainer}>
           <Text style={styles.heading}>Add new Product</Text>
 
-          <View style={styles.imagePlaceholder}>
-            <Ionicons name="image-outline" size={34} color="#2F2F2F" />
-          </View>
-
           <Text style={styles.sectionTitle}>General information</Text>
 
           <View style={styles.fieldGroup}>
@@ -276,7 +272,7 @@ export default function AddProduct({
           })()}
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Initial Stock</Text>
+            <Text style={styles.label}>Quantity</Text>
             <TextInput
               placeholder="0"
               placeholderTextColor={colors.placeholder}
