@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "CPRG303-A4",
-    "slug": "CPRG303-A4",
+    "name": "CPSY301",
+    "slug": "CPSY301",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "cprg303a4",
+    "scheme": "cpsy301",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
