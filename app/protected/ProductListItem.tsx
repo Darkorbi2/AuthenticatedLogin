@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 
 export type Product = {
   id: string;
@@ -11,9 +11,15 @@ export type Product = {
 
 type ProductListItemProps = {
   product: Product;
+  isAdmin: boolean;
+  onDelete: (id: string) => void;
 };
 
-export default function ProductListItem({ product }: ProductListItemProps) {
+export default function ProductListItem({
+  product,
+  isAdmin,
+  onDelete,
+}: ProductListItemProps) {
   return (
     <View style={styles.card}>
       <Text style={styles.name}>{product.name}</Text>
@@ -32,6 +38,16 @@ export default function ProductListItem({ product }: ProductListItemProps) {
         <Text style={styles.infoLabel}>Subcategory</Text>
         <Text style={styles.infoValue}>{product.subCategory}</Text>
       </View>
+
+      {isAdmin && (
+        <View style={styles.deleteButton}>
+          <Button
+            title="Delete Product"
+            color="#DC2626"
+            onPress={() => onDelete(product.id)}
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -82,5 +98,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.textMain,
     fontWeight: "500",
+  },
+
+  deleteButton: {
+    marginTop: 8,
   },
 });

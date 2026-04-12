@@ -21,11 +21,15 @@ import ProductListItem, { Product } from "../ProductListItem";
 
 const PRODUCT_STORAGE_KEY = "products";
 const CATEGORY_STORAGE_KEY = "categories";
+const ADMIN_EMAIL = "admin@test.com";
 
 export default function ProductScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchText, setSearchText] = useState("");
+
+  const currentUser = auth.currentUser;
+  const isAdmin = currentUser?.email === ADMIN_EMAIL;
 
   const loadProducts = async () => {
     try {
@@ -57,14 +61,14 @@ export default function ProductScreen() {
     useCallback(() => {
       loadProducts();
       loadCategories();
-    }, []),
+    }, [])
   );
 
   const saveProducts = async (updatedProducts: Product[]) => {
     try {
       await AsyncStorage.setItem(
         PRODUCT_STORAGE_KEY,
-        JSON.stringify(updatedProducts),
+        JSON.stringify(updatedProducts)
       );
     } catch (error) {
       Alert.alert("Error", "Failed to save products");
@@ -81,9 +85,41 @@ export default function ProductScreen() {
   };
 
   const addProduct = async (newProduct: Product) => {
+    const exists = products.some(
+      (product) =>
+        product.name.trim().toLowerCase() ===
+        newProduct.name.trim().toLowerCase()
+    );
+
+    if (exists) {
+      Alert.alert("Error", "Product already exists");
+      return;
+    }
+
     const updatedProducts = [...products, newProduct];
     setProducts(updatedProducts);
     await saveProducts(updatedProducts);
+  };
+
+  const deleteProduct = (id: string) => {
+    Alert.alert(
+      "Delete Product",
+      "Are you sure you want to delete this product?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            const updatedProducts = products.filter(
+              (product) => product.id !== id
+            );
+            setProducts(updatedProducts);
+            await saveProducts(updatedProducts);
+          },
+        },
+      ]
+    );
   };
 
   const filteredProducts = useMemo(() => {
@@ -131,7 +167,13 @@ export default function ProductScreen() {
         }
         data={filteredProducts}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ProductListItem product={item} />}
+        renderItem={({ item }) => (
+          <ProductListItem
+            product={item}
+            isAdmin={!!isAdmin}
+            onDelete={deleteProduct}
+          />
+        )}
         ListEmptyComponent={
           <Text style={styles.emptyText}>
             {searchText
