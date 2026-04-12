@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useMemo, useState } from "react";
 import {
+  Alert,
     FlatList,
     Modal,
     Pressable,
@@ -183,6 +184,8 @@ export default function AddProduct({
         };
 
         onAddProduct(newProduct);
+        Alert.alert("Success", "Product added successfully");
+        
         resetForm();
       }}
     >
